@@ -1,8 +1,12 @@
 <?php include('./inc/conn.php'); ?>
 <?php 
-if(isset($_GET['wxkey'])){   
-   $wxkey = $_GET['wxkey'];
-   setcookie('wxkey',$_GET['wxkey'],time()+60*60*24*15);
+session_start();
+
+if(isset($_GET['wxkey'])){  
+   $wxkey = str_replace(" ","",$_GET['wxkey']);
+   if($wxkey!=""){
+	   setcookie('wxkey',$wxkey,time()+60*60*24*15);
+	   }  
 }else{
    $wxkey="";
 }
@@ -16,7 +20,7 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
 		 $xiangmu = $_SESSION['xiangmu'];  
 		 $yhnum = $_SESSION["yhnum"];    	
 	}else{
-	     header("Location: index.php?wxkey=".$wxkey."");
+	     header("Location: index.php");
 	}
 }
 
@@ -38,13 +42,43 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
     <script src="jq/jquery.cookie.js"></script>
     <script src="js/highcharts.js"></script>
 	<script type="text/javascript">
-    
-	  //alert($.cookie('wxkey'));
-	$(document).ready(function(){
-		$("#exit").click(
-		 $.cookie('fullname',null)
-		);			
-	});  
+	function WeiXinCloseBtn() {
+	  if (typeof WeixinJSBridge == "undefined") {
+		closeWin()
+	   } else {
+		 WeixinJSBridge.call('closeWindow'); 
+	  }
+    }
+	function onBridgeReady(){
+     document.addEventListener('WeixinJSBridgeReady', function onBridgeReady()  {
+	   WeixinJSBridge.call('hideOptionMenu');
+	   });
+	  }
+	  //$(document).ready(function(){
+	
+		
+			  onBridgeReady();
+		 
+
+	  //});
+		function closeWin(){
+			//alert('cl')		
+		  var keys=document.cookie.match(/[^ =;]+(?=\=)/g); 
+		  if (keys) { 
+			for (var i = keys.length; i--;) 
+			document.cookie=keys[i]+'=0;expires=' + new Date( 0).toUTCString() 
+			window.location.href='index.php';
+		  } 
+		
+		}
+	  
+	  $(document).ready(function(){$("#fname").text($.cookie('fullname').charAt(0))});
+	
+	  
+	  function clearWxkey(){
+	  if($.cookie('wxkey')!=0||$.cookie('wxkey')!=""){
+		  }
+	  }
     
     $(document).ready(function () {
 		  var chart;  
@@ -86,7 +120,7 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
                 type: 'area'
             },
             title: {
-                text: '项目参加人数'
+                text: '累计参加(人)'
             },
             subtitle: {
                 text: ' '
@@ -411,15 +445,16 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
    </div><!-- /副项目1、2 -->
       
   <div class="ui-grid-solo">
-     <div>      
-         <div id="container" style="min-width:100px;height:250px">载入中</div>   
-        </div>
+    <!-- <div> -->     
+         <div id="container" style="min-width:100px;height:200px">载入中</div>   
+      <!--  </div>-->
     </div> <!--图谱-->
     
     <div class="ui-grid-solo">
-      <div style="text-align:center;">
-           <a id="exit" href="">退出</a> |
-           <a id="logout" href="">解绑</a>          
+      <div style="text-align:center;font-size:12px;">
+           @<span id="fname">x</span>师傅
+           <a href="#"  onclick="WeiXinCloseBtn();">退出</a> |
+           <a id="logout" href="">非本人?</a>          
        </div>
     </div> <!--link-->
    

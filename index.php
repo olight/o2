@@ -1,3 +1,14 @@
+<?php 
+if(isset($_GET['wxkey'])){  
+   $wxkey = str_replace(" ","",$_GET['wxkey']);
+   if($wxkey!=""){
+	   setcookie('wxkey',$wxkey,time()+60*60*24*15);
+	   }  
+}else{
+  
+   setcookie('wxkey',0,time()+60*60*24*15);
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,9 +19,61 @@
 <link rel="stylesheet" href="jq/jquery.mobile-1.4.2.min.css" />
   <script src="jq/jquery-1.9.1.min.js"></script>
   <script src="jq/jquery.mobile-1.4.2.min.js"></script>
+  <script src="jq/jquery.cookie.js"></script>
 <script type="text/javascript">
 
 $(document).ready(function(e) {
+  
+  if($.cookie("wxkey")!=0){
+	$("#wxkey").val($.cookie("wxkey"));
+	function djstz(i){
+		//var i = 6;
+		var c;
+		tz();
+		function tz(){		  
+			     i--
+				 $("#submit").text("微信验证自动登陆中("+i+")")			 
+				 c=setTimeout(tz,1000)
+				 if(i==0){
+					 $("#submit").text("跳转中..")		
+					 clearTimeout(t);
+					  window.location.href='main.php';	
+	
+				 };//end if		
+		};
+					
+	}	
+	
+  	$.ajax({
+					 type: "POST",
+					 url: "fulnamelogin_chk.php",
+					 data: {wxkey:$.cookie("wxkey")},
+					 beforeSend: function(XMLHttpRequest){
+						  $("#submit").val("LOADING");
+					 },
+					 success: function(msg){
+					   if(msg=='success_wxlogin'){
+						   //console.log(djs());
+						   $("#fullname").attr("disabled",true);
+						   $("#submit").attr("disabled",true);
+						   $("#submit").text("检测到微信，登陆中...");
+						   djstz(6);
+						   				
+						
+					   
+					   }else if(msg=='false_wxnull_namnull'){
+						  $("#message").text("新的微信盆友，输入姓名:");
+					   
+					   }else{
+						  $("#message").text("在自动检测微信时出现的莫名错误");
+					   
+					   }},
+  
+					 timeout:10000                 
+  
+				 });//end ajax
+  }	;
+
  
   function resetTextFields()
 	  {
@@ -65,6 +128,7 @@ $(document).ready(function(e) {
 			  
 			
 				$("#submit").attr("disabled",true);
+				//$("#fullname").attr("disabled",true);
 				$.ajax({
 					 type: "POST",
 					 url: "fulnamelogin_chk.php",
@@ -74,14 +138,29 @@ $(document).ready(function(e) {
 						 //ShowLoading();
 					 },
 					 success: function(msg){
-					   if(msg=='success'){
+					   if(msg=='success_withoutwx'){
 						// $.mobile.changePage("main.php","slide", true, true);
 						window.location.href='main.php';
-					   }else{
-						  $("#message").text("哎呀，您的姓名有误");
+					   }else if(msg=='success_savedwx'){
+						alert('您的微信已绑定成功！');
+						window.location.href='main.php';
+					   }else if(msg=='false_hadwx'){
+						  $("#message").text("此人已绑定其他微信");
 						  $("#submit").attr("disabled",false);
-						  $("#submit").text("GO");	
-						  n=6; //如果验证失败重置读秒为6
+						  $("#submit").text("GO");
+						   n=6;	
+					   }else if(msg=='false_errnam'){
+						  $("#message").text("姓名有误或不存在");
+						  $("#submit").attr("disabled",false);
+						  $("#submit").text("GO");
+						   n=6;	
+						  
+					   }else if(msg=='false_withoutwx_errnam'){
+						  $("#message").text("输入的姓名有误或不存在");
+						  $("#submit").attr("disabled",false);
+						  $("#submit").text("GO");
+						   n=6;	//如果验证失败重置读秒
+						   
 					   }},
   
 					 timeout:10000                 
@@ -123,7 +202,7 @@ $(document).ready(function(e) {
          
          <form id="loginform" action="" method="post">
           <input name="fullname" id="fullname" placeholder="键入中文姓名查询" value="" type="text" onKeyDown="if(event.keyCode==13) return false;">              
-         <!-- <input name="submit" id="submit" type="button" value="查询" >-->
+         <input  id="wxkey" name="wxkey" type="hidden" value="" >
          <div><button id="submit" type="button" >GO</button></div>
          </form>
         </div>

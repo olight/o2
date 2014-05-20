@@ -62,22 +62,63 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
 
 	  //});
 		function closeWin(){
-			//alert('cl')		
+		  var wxkey =	$.cookie('wxkey');
 		  var keys=document.cookie.match(/[^ =;]+(?=\=)/g); 
 		  if (keys) { 
 			for (var i = keys.length; i--;) 
 			document.cookie=keys[i]+'=0;expires=' + new Date( 0).toUTCString() 
-			window.location.href='index.php';
+			window.location.href='index.php?wxkey='+wxkey;
 		  } 
 		
 		}
 	  
 	  $(document).ready(function(){$("#fname").text($.cookie('fullname').charAt(0))});
 	
-	  
-	  function clearWxkey(){
-	  if($.cookie('wxkey')!=0||$.cookie('wxkey')!=""){
-		  }
+	  $(document).ready(function(){$("#jbwx").click(function(){
+		  if($.cookie('wxkey')!=0||$.cookie('wxkey')!=""){
+			  if(confirm('将解绑微信，确认不是本人？')){
+				   $.ajax({ 
+				    type: "GET",   
+					url: 'wxkey_clear.php',      				  
+					success:function(msg){  				      
+					  if(msg=='success_jbwx'){
+						  alert('解绑成功即将退出');
+						  	//window.location.href='index.php?wxkey='+$.cookie('wxkey');
+								closeWin();				  
+						  }else if(msg=='false_jbwx'){
+							  alert('解绑操作失败');							  
+							  }else if(msg=='fasle_errwxerrname'){
+								  alert('解绑失败,没有绑定微信或姓名有误');	
+								  }else if(msg=='fasle_nowxkey'){
+									  alert('微信或姓名为空，无法解绑');	  
+									  }else if(msg=='nowxkey'){
+										  alert('没检测到姓名、微信，无法解绑');	
+										  }								  
+					  
+				   },    
+					error: function(){alert('error!')},    
+				   });  				  				  
+				 }
+			 }
+		  
+		})		  
+	  });
+	  function clearWxkey(){		  
+		  if($.cookie('wxkey')!=0||$.cookie('wxkey')!=""){
+			  if(confirm('确认？')){
+				   $.ajax({    
+					url: 'wxkey_clear.php',      
+					async:false,  
+					success:function(msg){  
+				   // alert(point);									  
+					  
+				   },    
+					error: function(){alert('error!')},    
+				   });  
+				  
+				  
+				 }
+			 }
 	  }
     
     $(document).ready(function () {
@@ -453,8 +494,8 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
     <div class="ui-grid-solo">
       <div style="text-align:center;font-size:12px;">
            @<span id="fname">x</span>师傅
-           <a href="#"  onclick="WeiXinCloseBtn();">退出</a> |
-           <a id="logout" href="">非本人?</a>          
+           <a href="javascript:void(0)"  onclick="WeiXinCloseBtn();">退出</a> |
+           <a id="jbwx" href="javascript:void(0)">非本人?</a>          
        </div>
     </div> <!--link-->
    

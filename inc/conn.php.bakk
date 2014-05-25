@@ -130,34 +130,4 @@ $conne = new opmysql();
 
 
 
-$sql = "select * from tb_yh";
-
-
- try{
-//                        
-//      $res = $conne->mysql_query_rst($sql);
-//	  
-//	   while($r=mysql_fetch_array($res)){
-//		   
-//		   echo $r['yhxm'].$r['yhbh'];
-//		   
-//		   }
-//
-      $r=$conne->getRowsArray($sql);
-  print_r($r); 
-	  for($i=1;$i<=$conne->getRowsNum($sql);$i++){
-		  
-		  echo $r[$i-1]['yhxm'].$r[$i-1]['yhbh'].'</br>';
-		  
-		  }             
-    
-                    
-                }
-                catch(Exception $e)
-                {
-                    echo $e->getMessage();
-                }
-
-
-
 ?>

@@ -21,6 +21,15 @@ if(isset($_GET['wxkey'])){
   <script src="jq/jquery.mobile-1.4.2.min.js"></script>
   <script src="jq/jquery.cookie.js"></script>
 <script type="text/javascript">
+function onBridgeReady(){
+     document.addEventListener('WeixinJSBridgeReady', function onBridgeReady()  {
+	   WeixinJSBridge.call('hideOptionMenu');
+	   });
+	  }
+	  //$(document).ready(function(){
+	
+		
+			  onBridgeReady();
 
 $(document).ready(function(e) {
   

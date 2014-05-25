@@ -1,9 +1,9 @@
 ﻿<?php
 class opmysql{
-	private $host = 'mysql.webcindario.com';			//服务器地址
-	private $name = 'zealyan';					//登录账号
-	private $pwd = 'Yzg@2014';					//登录密码
-	private $dBase = 'zealyan';			//数据库名称
+	private $host = 'o2life-db.my.phpcloud.com';			//服务器地址
+	private $name = 'o2life';					//登录账号
+	private $pwd = 'yan881028';					//登录密码
+	private $dBase = 'o2life';			//数据库名称
 	private $conn = '';						//数据库链接资源
 	private $result = '';					//结果集
 	private $msg = '';						//返回结果
@@ -127,36 +127,6 @@ class opmysql{
 	}
 }
 $conne = new opmysql();
-
-
-
-$sql = "select * from tb_yh";
-
-
- try{
-//                        
-//      $res = $conne->mysql_query_rst($sql);
-//	  
-//	   while($r=mysql_fetch_array($res)){
-//		   
-//		   echo $r['yhxm'].$r['yhbh'];
-//		   
-//		   }
-//
-      $r=$conne->getRowsArray($sql);
-  print_r($r); 
-	  for($i=1;$i<=$conne->getRowsNum($sql);$i++){
-		  
-		  echo $r[$i-1]['yhxm'].$r[$i-1]['yhbh'].'</br>';
-		  
-		  }             
-    
-                    
-                }
-                catch(Exception $e)
-                {
-                    echo $e->getMessage();
-                }
 
 
 

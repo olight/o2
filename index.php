@@ -57,6 +57,18 @@ $(document).ready(function(e) {
 					 type: "POST",
 					 url: "fulnamelogin_chk.php",
 					 data: {wxkey:$.cookie("wxkey")},
+					 dataFilter: function(data,type){
+					   var str = data;
+					   console.log(str);
+					  // str.match(str)
+					   if(str.match('success_wxlogin')=='success_wxlogin'){
+						   data = 'success_wxlogin'
+					   }else if(str.match('false_wxnull_namnull')=='false_wxnull_namnull'){
+						   data = 'false_wxnull_namnull'
+					   }
+					   return data;
+					 },
+					 dataType:"text",
 					 beforeSend: function(XMLHttpRequest){
 						  $("#submit").val("LOADING");
 					 },
@@ -142,6 +154,24 @@ $(document).ready(function(e) {
 					 type: "POST",
 					 url: "fulnamelogin_chk.php",
 					 data: $("#loginform").serialize(),
+					 dataFilter: function(data,type){
+					   var str = data;
+					   console.log(str);
+					  // str.match(str)
+					   if(str.match('success_withoutwx')=='success_withoutwx'){
+						   data = 'success_withoutwx'
+					   }else if(str.match('success_savedwx')=='success_savedwx'){
+						   data = 'success_savedwx'					   
+					   }else if(str.match('false_hadwx')=='false_hadwx'){
+						   data = 'false_hadwx'					   
+					   }else if(str.match('false_errnam')=='false_errnam'){
+						   data = 'false_errnam'					   
+					   }else if(str.match('false_withoutwx_errnam')=='false_withoutwx_errnam'){
+						   data = 'false_withoutwx_errnam'					   
+					   }
+					   return data;
+					 },
+					 dataType:"text",
 					 beforeSend: function(XMLHttpRequest){
 						  $("#submit").val("LOADING");
 						 //ShowLoading();

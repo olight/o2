@@ -29,6 +29,18 @@ $(document).ready(function(e) {
 					 type: "POST",
 					 url: "./login_chk.php",
 					 data: $("#loginform").serialize(),
+					 dataFilter: function(data,type){
+					   var str = data;
+					   console.log(str);
+					  // str.match(str)
+					   if(str.match('success')=='success'){
+						   data = 'success'
+					   }else if(str.match('false')=='false'){
+						   data = 'false'					   
+					   }
+					   return data;
+					 },
+					 dataType:"text",
 					 beforeSend: function(XMLHttpRequest){
 						  $("#submit").val("LOADING");
 						 //ShowLoading();

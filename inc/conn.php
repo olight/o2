@@ -28,6 +28,7 @@ class opmysql{
 	//链接数据库
 	function init_conn(){
 		$this->conn=@mysql_connect($this->host,$this->name,$this->pwd);
+		@mysql_query("SET NAMES 'UTF8'");
 		@mysql_select_db($this->dBase,$this->conn);
 		
 	}

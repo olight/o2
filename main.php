@@ -79,7 +79,25 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
 			  if(confirm('将解绑微信，确认不是本人？')){
 				   $.ajax({ 
 				    type: "GET",   
-					url: 'wxkey_clear.php',      				  
+					url: 'wxkey_clear.php',
+					dataFilter: function(data,type){
+					   var str = data;
+					   console.log(str);
+					  // str.match(str)
+					   if(str.match('success_jbwx')=='success_jbwx'){
+						   data = 'success_jbwx'
+					   }else if(str.match('false_jbwx')=='false_jbwx'){
+						   data = 'false_jbwx'
+					   }else if(str.match('fasle_errwxerrname')=='fasle_errwxerrname'){
+						   data = 'fasle_errwxerrname'
+					   }else if(str.match('fasle_nowxkey')=='fasle_nowxkey'){
+						   data = 'fasle_nowxkey'
+					   }else if(str.match('nowxkey')=='nowxkey'){
+						   data = 'nowxkey'
+					   }
+					   return data;
+					 },
+					dataType:"text",      				  
 					success:function(msg){  				      
 					  if(msg=='success_jbwx'){
 						  alert('解绑成功即将退出');
@@ -209,7 +227,7 @@ if(isset($_COOKIE['fullname'])&&isset($_COOKIE['xiangmu'])&&isset($_COOKIE['yhnu
  
  
  
-	  $sql = "select * from v_tj_ds_yq_kz_KQ_zpm where yhbh = ".$yhnum."";
+	  $sql = "select * from v_tj_ds_yq_kz_kq_zpm where yhbh = ".$yhnum."";
 	  try{
 		   $r=$conne->getRowsRst($sql);
 			$xm=$r['yhxm'];

@@ -12,6 +12,25 @@
 						 type: "POST",
 						 url: "./add_insert.php",
 						 data: $("#addform").serialize(),
+						 dataFilter: function(data,type){
+						   var str = data;
+						  
+						  // str.match(str)
+						   if(str.match('same')=='same'){
+							   data = 'same'
+						   }else{
+							  str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+							  str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+							  str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+							  str = str.replace(' ',''); //去除多余空格
+							  str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+							  str = str.replace(/\d+/ig,'$&');
+							  data =str;
+							  console.log(data);					   
+						   }
+						   return data;
+						 },
+						 dataType:"text",
 						 beforeSend: function(XMLHttpRequest){
 							  //$("#submit").val("LOADING");
 							 //ShowLoading();
@@ -27,7 +46,7 @@
 							   alert("此活动日期库里有啦，请返回到列表中更新记录");
 							   $.mobile.loading("hide");
 							 }else{
-								alert("成功！强行插入了"+msg+"条人员记录");
+								alert('成功！强行插入了'+$.trim(msg)+'条人员记录');
 								$.mobile.changePage("./list.php?xiangmu="+$("#xiangmu").val()+"","slide", true, true);
 							 }
 						 },
